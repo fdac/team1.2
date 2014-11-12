@@ -1,0 +1,25 @@
+#!/usr/bin/expect
+
+# linux command: expect run > ~/statsGather 2> ~/statsGather.err
+set timeout -1
+spawn python gatherInfoTeam1.py commits
+expect {           
+  "Username for 'https://bitbucket.org':" {
+      send "\r"
+      exp_continue
+  } 
+  "Password for 'https://bitbucket.org':" {
+      send "\r"
+      exp_continue
+  }
+  "user:" {
+#      send "\003"   # ctr+c
+      send "\004"  # ctr+D
+      exp_continue
+  }
+  "password:" {
+#      send "\003"  # ctr+c
+      send "\004"   # ctr+d
+      exp_continue
+  }
+}

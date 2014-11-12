@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+TEAM=1
+grep ^$TEAM';hg' divided > todohg
+grep ^$TEAM';git' divided > todogit
+mkdir git
+cd git
+cat ../todogit | while read line
+do 
+ repo=$(echo $line | awk -F';' '{print $3}')
+ path=$(echo $repo | sed 's"/"_"')
+ echo 'path ' $path
+ echo 'repo ' $repo
+ git clone --mirror https://bitbucket.org/$repo $path
+spcleft=$(df -k . | tail -1 | awk '{ print $4 }')
+if [[ $spcleft -lt 1000000 ]]
+then
+  #rsync and remove what has been copied
+  rsync -ae 'ssh -p2200' * kagrawa1@da2.eecs.utk.edu:git/
+  ls | while read dir; do [[ -d $dir ]] && find $dir -delete; done
+fi
+done
+cd ../
+#similar for git
+
+
+# hg clone -U https://bitbucket.org/$repo $path
+# repo  1;hg;dyna_mole/yet-another-quote-fork
+# path  1;hg;dyna_mole_yet-another-quote-fork
+# new   dyna_mole/yet-another-quote-fork 
+
+# --- clone_org.py ---
+# n  apdavison/nrnutils repo 
+# p  apdavison_nrnutils path
+# hg clone -U https://bitbucket.org/' + n + ' ' + p
+
+
+
